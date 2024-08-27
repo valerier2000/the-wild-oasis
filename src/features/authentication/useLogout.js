@@ -1,18 +1,18 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { login as loginApi } from "../../services/apiAuth";
+import { logout as logoutApi } from "../../services/apiAuth";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
-export function useLogin() {
+export function useLogout() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  const { mutate: login, isLoading } = useMutation({
-    mutationFn: ({ email, password }) => loginApi({ email, password }),
+  const { mutate: logout, isLoading } = useMutation({
+    mutationFn: logoutApi,
 
-    onSuccess: (user) => {
-      queryClient.setQueriesData(["user"], user);
-      navigate("/dashboard", { replace: true });
+    onSuccess: () => {
+      queryClient.removeQueries();
+      navigate("/login", { replace: true });
     },
 
     onError: (err) => {
@@ -21,5 +21,5 @@ export function useLogin() {
     },
   });
 
-  return { login, isLoading };
+  return { logout, isLoading };
 }
